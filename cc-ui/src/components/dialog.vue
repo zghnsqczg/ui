@@ -1,19 +1,22 @@
-<template>
-  <div class="cc-dialog_wrapper">
-    <div class="cc-dialog" :style="{ width, marginTop: top }">
-      <div class="cc-dialog_header">
-        <slot name="title">
-          <span class="cc-dialog_title">{{ title }}</span>
-        </slot>
-        <button class="cc-dialog_headerbtn">x</button>
-      </div>
-      <div class="cc-dialog_body"></div>
-      <div class="cc-dialog_footer">
-        <cc-button>取消</cc-button>
-        <cc-button type="primary">确定</cc-button>
+<template >
+  <transition name="dialog-fade">
+    <div class="cc-dialog_wrapper" v-show="visible" @click.self="handelClose">
+      <div class="cc-dialog" :style="{ width, marginTop: top }">
+        <div class="cc-dialog_header">
+          <slot name="title">
+            <span class="cc-dialog_title">{{ title }}</span>
+          </slot>
+          <button @click="handelClose" class="cc-dialog_headerbtn">x</button>
+        </div>
+        <div class="cc-dialog_body">
+          <slot></slot>
+        </div>
+        <div class="cc-dialog_footer" v-if="$slots.footer">
+          <slot name="footer"> </slot>
+        </div>
       </div>
     </div>
-  </div>
+  </transition>
 </template>
 
 <script>
@@ -26,11 +29,20 @@ export default {
     },
     width: {
       type: String,
-      default: "30%",
+      default: "50%",
     },
     top: {
       type: String,
       default: "15vh",
+    },
+    visible: {
+      type: Boolean,
+      default: false,
+    },
+  },
+  methods: {
+    handelClose() {
+      this.$emit("update:visible", false);
     },
   },
 };
